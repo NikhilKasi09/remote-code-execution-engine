@@ -22,8 +22,7 @@ target/
 .env.production
 
 
-# 4. IDE Settings & OS Junk
-
+# 4. IDE Settings & OS 
 
 .idea/
 *.iml

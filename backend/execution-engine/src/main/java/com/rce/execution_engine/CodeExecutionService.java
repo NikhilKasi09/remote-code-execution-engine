@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class CodeExecutionService {
@@ -30,8 +31,14 @@ public class CodeExecutionService {
                 output.append(line).append("\n");
             }
 
-            // Wait for the Docker container to finish executing
-            process.waitFor();
+            // Enforce a 5-second timeout
+            boolean finishedInTime = process.waitFor(5, TimeUnit.SECONDS);
+
+            if (!finishedInTime){
+                // Kill the process if it exceeds the time limit
+                process.destroyForcibly();
+                return "Error: Execution timed out. Code exceeded the 5-second limit.";
+            }
 
             return output.toString();
 
