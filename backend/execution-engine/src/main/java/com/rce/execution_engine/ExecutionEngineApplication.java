@@ -18,10 +18,10 @@ public class ExecutionEngineApplication {
 			System.out.println("--- STARTING PHASE 1 TEST ---");
 
 			// The hardcoded Python script we want to test
-			String pythonCode = "print('Hello from the Docker Sandbox in Cardiff!')\n" +
-					"x = 10\n" +
-					"y = 20\n" +
-					"print(f'The sum is {x + y}')";
+			String pythonCode =
+					"print('Attempting to allocate 1GB of RAM...')\n" +
+							"x = 'A' * (10**9)\n" +
+							"print('If you see this, the constraints failed!')";
 
 			// Trigger the engine
 			String result = executionService.executePython(pythonCode);

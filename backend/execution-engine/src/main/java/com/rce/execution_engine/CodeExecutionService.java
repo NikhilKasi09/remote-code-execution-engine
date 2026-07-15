@@ -53,7 +53,11 @@ public class CodeExecutionService {
         // Build the Docker command
         // docker run --rm -v /path/to/temp:/app python:3.9 python /app/script.py
         ProcessBuilder processBuilder = new ProcessBuilder(
-                "docker", "run", "--rm",
+                "docker", "run",
+                "--rm", // Removes the dead container instantly
+                "--memory=256m", // No more than 256 MB of RAM
+                "--cpus=0.5", // Limits the CPU to use no more than half a single core
+                "--network=none", // Isolates network
                 "-v", hostPath + ":/app",
                 "python:3.9",
                 "python", "/app/script.py"
