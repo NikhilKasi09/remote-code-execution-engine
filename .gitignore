@@ -1,0 +1,35 @@
+
+# 1. Frontend (React/Node)
+# Ignore massive dependency folders that can be regenerated with npm install
+node_modules/
+# Ignore compiled/minified production output
+dist/
+build/
+
+
+# 2. Backend (Java/Spring Boot)
+# Ignore Maven compiled .class files and the final .jar executables
+target/
+# Catch-all to prevent any stray compiled Java files from being committed
+*.class
+
+# 3. Environment Variables (Security)
+
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+
+# 4. IDE Settings & OS Junk
+
+
+.idea/
+*.iml
+
+.vscode/
+.eclipse/
+
+.DS_Store
+Thumbs.db

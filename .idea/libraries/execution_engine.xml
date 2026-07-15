@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="execution-engine">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/backend/execution-engine.zip!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
