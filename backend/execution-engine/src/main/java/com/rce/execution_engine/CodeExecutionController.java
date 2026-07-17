@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*") // Allows frontend communication
+@CrossOrigin(origins = "*") // Allows frontend communication between different ports
 public class CodeExecutionController {
 
     private final CodeExecutionService executionService;
