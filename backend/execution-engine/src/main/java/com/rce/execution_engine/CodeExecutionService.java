@@ -139,7 +139,7 @@ public class CodeExecutionService {
         File outputFile = tempDir.resolve("output.txt").toFile();
         processBuilder.redirectOutput(outputFile);
 
-        // Execute the command
+        // Execute command
         return processBuilder.start();
     }
 }
