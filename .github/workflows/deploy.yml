@@ -51,18 +51,19 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Pull the brand new image from Docker Hub
+          # Pull the brand-new image from Docker Hub
             docker pull ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
             
-            # Stop and remove the currently running container (if it exists)
+          # Stop and remove the currently running container (if it exists)
             docker stop rce-backend || true
             docker rm rce-backend || true
             
-            # Run the new container, exposing port 8080 and mounting the Docker socket
+          # Run the new container, exposing port 8080 and mounting the Docker socket
             docker run -d \
               -p 8080:8080 \
               --name rce-backend \
               -v /var/run/docker.sock:/var/run/docker.sock \
+              -v /tmp:/tmp \
               ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
             
             # Clean up old, unused images to prevent the EC2 disk from filling up
