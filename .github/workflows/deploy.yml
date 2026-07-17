@@ -1,0 +1,69 @@
+name: Deploy RCE Backend to EC2
+
+# rigger the workflow when code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/execution-engine/**' # Only run if backend code changes
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Clone the repository into the GitHub Actions runner
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Set up the Java 21 environment
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Compile the Spring Boot application (skipping tests to speed up deployment)
+      - name: Build with Maven
+        working-directory: ./backend/execution-engine
+        run: mvn clean package -DskipTests
+
+      # Log in to your Docker Hub account using your GitHub Secrets
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Build the Docker image and push it to Docker Hub
+      - name: Build and Push Docker Image
+        working-directory: ./backend/execution-engine
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
+
+      # SSH into your AWS EC2 instance and restart the server
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Pull the brand new image from Docker Hub
+            docker pull ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
+            
+            # Stop and remove the currently running container (if it exists)
+            docker stop rce-backend || true
+            docker rm rce-backend || true
+            
+            # Run the new container, exposing port 8080 and mounting the Docker socket
+            docker run -d \
+              -p 8080:8080 \
+              --name rce-backend \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
+            
+            # Clean up old, unused images to prevent the EC2 disk from filling up
+            docker image prune -f
