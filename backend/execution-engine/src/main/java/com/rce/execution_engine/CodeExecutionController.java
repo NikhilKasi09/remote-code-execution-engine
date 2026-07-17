@@ -25,15 +25,9 @@ public class CodeExecutionController {
         String userCode = request.getCode();
         String language = request.getLanguage();
 
-        String output;
+        // Execute based on language
 
-        // Execute based on language (only have python currently)
-
-        if (language.equalsIgnoreCase("python")){
-            output = executionService.executePython(userCode);
-        } else {
-            output = "Error: Unsupported language selected.";
-        }
+        String output = executionService.executeCode(userCode, language);
 
         // Format back to JSON
         Map<String, String> response = new HashMap<>();
