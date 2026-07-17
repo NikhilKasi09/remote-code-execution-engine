@@ -43,7 +43,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
 
-      # SSH into your AWS EC2 instance and restart the server
+      #  SSH into your AWS EC2 instance and restart the server
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -51,14 +51,14 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-          # Pull the brand-new image from Docker Hub
+            # Pull the brand new image from Docker Hub
             docker pull ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
             
-          # Stop and remove the currently running container (if it exists)
+            # Stop and remove the currently running container (if it exists)
             docker stop rce-backend || true
             docker rm rce-backend || true
             
-          # Run the new container, exposing port 8080 and mounting the Docker socket
+            # Run the new container, exposing port 8080 and mounting the Docker socket
             docker run -d \
               -p 8080:8080 \
               --name rce-backend \
