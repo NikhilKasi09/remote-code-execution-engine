@@ -20,6 +20,8 @@ target/
 .env.development
 .env.test
 .env.production
+*.pem
+rce-key.pem
 
 
 # 4. IDE Settings & OS 
@@ -32,3 +34,4 @@ target/
 
 .DS_Store
 Thumbs.db
+
