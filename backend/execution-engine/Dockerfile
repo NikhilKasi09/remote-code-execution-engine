@@ -1,7 +1,7 @@
 # Use an official Java runtime as a parent image
 FROM eclipse-temurin:21-jdk
 
-# Install the Docker CLI inside this container
+# Install the Docker CLI inside container
 RUN apt-get update && \
     apt-get install -y docker.io && \
     rm -rf /var/lib/apt/lists/*
