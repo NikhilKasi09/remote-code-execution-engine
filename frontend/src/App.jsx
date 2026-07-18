@@ -133,7 +133,7 @@ function App() {
           </div>
           {/* Terminal Body */}
           <div style={{ flex: 1, padding: '16px', overflowY: 'auto', fontFamily: 'monospace', fontSize: '13px' }}>
-            <pre style={{ color: '#3fb950', margin: 0, whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
+            <pre style={{ color: '#ffffff', margin: 0, whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
               {output || '> Engine ready. Waiting for payload...'}
             </pre>
           </div>
