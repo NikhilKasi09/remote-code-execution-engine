@@ -20,6 +20,7 @@ public class CodeExecutionService {
         String fileName;
         String dockerImage;
         String shellCommand;
+        long timeoutSeconds;
 
         // Set the configuration based on the requested language
         switch (language.toLowerCase()) {
@@ -27,12 +28,14 @@ public class CodeExecutionService {
                 fileName = "script.py";
                 dockerImage = "python:3.9";
                 shellCommand = "python script.py";
+                timeoutSeconds = 5;
                 break;
             case "cpp":
                 fileName = "main.cpp";
                 dockerImage = "gcc:latest";
                 // Chains the compilation and execution commands together
                 shellCommand = "g++ main.cpp -o main && ./main";
+                timeoutSeconds = 10;
                 break;
             default:
                 return "Error: Unsupported language selected.";
@@ -77,7 +80,7 @@ public class CodeExecutionService {
             Process process = getProcess(tempDir, dockerImage, shellCommand, containerName);
 
             // Enforce a 5-second timeout
-            boolean finishedInTime = process.waitFor(5, TimeUnit.SECONDS);
+            boolean finishedInTime = process.waitFor(timeoutSeconds, TimeUnit.SECONDS);
 
             if (!finishedInTime){
                 // Kill the process if it exceeds the time limit
