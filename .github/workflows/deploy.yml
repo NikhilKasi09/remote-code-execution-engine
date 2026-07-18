@@ -62,8 +62,9 @@ jobs:
             docker run -d \
               -p 8080:8080 \
               --name rce-backend \
+              -e TMPDIR=/rce-workspace \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v /tmp:/tmp \
+              -v /rce-workspace:/rce-workspace \
               ${{ secrets.DOCKER_USERNAME }}/rce-engine:latest
             
             # Clean up old, unused images to prevent the EC2 disk from filling up
