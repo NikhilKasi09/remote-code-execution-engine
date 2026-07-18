@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 import java.util.UUID;
 
@@ -40,8 +41,19 @@ public class CodeExecutionService {
         Path tempDir = null;
 
         try {
-            // Create a temporary directory on the host machine
-            tempDir = Files.createTempDirectory("rce-" + language + "-");
+            // Create a temporary directory on the host machine bases on OS
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                // If running locally on Windows, use default temp directory
+                tempDir = Files.createTempDirectory("rce-" + language + "-");
+            } else {
+                // If running on AWS Linux, explicitly force it into our DooD shared volume
+                Path workspaceDir = Paths.get("/rce-workspace");
+                if (!Files.exists(workspaceDir)) {
+                    Files.createDirectories(workspaceDir);
+                }
+                tempDir = Files.createTempDirectory(workspaceDir, "rce-" + language + "-");
+            }
 
             // Resolve the correct file name dynamically (script.py or main.cpp)
             Path sourcePath = tempDir.resolve(fileName);
