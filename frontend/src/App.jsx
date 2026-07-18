@@ -15,7 +15,7 @@ function App() {
     setOutput('Executing code in secure sandbox...\n');
     
     try {
-      const response = await axios.post('http://localhost:8080/api/execute', {
+      const response = await axios.post('/api/execute', {
         language: language,
         code: code
       });
