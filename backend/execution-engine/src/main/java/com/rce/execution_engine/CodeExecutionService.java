@@ -55,11 +55,21 @@ public class CodeExecutionService {
                 tempDir = Files.createTempDirectory(workspaceDir, "rce-" + language + "-");
             }
 
+            // Open directory permissions for docker
+            File dirFile = tempDir.toFile();
+            dirFile.setExecutable(true, false); // Allows the guest to 'enter' the directory
+            dirFile.setReadable(true, false);   // Allows the guest to see the files inside
+            dirFile.setWritable(true, false);   // Allows the guest to write files (if needed)
+
             // Resolve the correct file name dynamically (script.py or main.cpp)
             Path sourcePath = tempDir.resolve(fileName);
 
             // Safely write the code to the temp file
             Files.writeString(sourcePath, code);
+
+            // Open script permissions for docker
+            File sourceFile = sourcePath.toFile();
+            sourceFile.setReadable(true, false); // Allows the guest to actually read the code
 
             String containerName = "rce-env" + UUID.randomUUID().toString();
 
