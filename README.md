@@ -4,7 +4,7 @@ A web-based code runner: write Python or C++ in a browser editor, hit run, and g
 
 It's the same basic idea behind LeetCode's or Replit's "run" button: take arbitrary, untrusted user code and execute it without letting it do anything to the machine it's running on.
 
-![screenshot placeholder](docs/screenshot.png)
+![demo](docs/demo.gif)
 
 ## How it works
 
