@@ -4,7 +4,7 @@ A web-based code runner: write Python or C++ in a browser editor, hit run, and g
 
 It's the same basic idea behind LeetCode's or Replit's "run" button: take arbitrary, untrusted user code and execute it without letting it do anything to the machine it's running on.
 
-![Remote Code Execution Engine Demo]([https://user-images.githubusercontent.com/.../demo.gif](https://github.com/user-attachments/assets/ea71ff9c-5759-4fad-8b1f-b4a35d6eb33f)
+![Remote Code Execution Engine Demo](https://github.com/user-attachments/assets/ea71ff9c-5759-4fad-8b1f-b4a35d6eb33f)
 ## How it works
 
 The frontend (React + [Monaco](https://microsoft.github.io/monaco-editor/), the editor component that powers VS Code) sends the submitted code and selected language to a single backend endpoint, `POST /api/execute`. From there:
