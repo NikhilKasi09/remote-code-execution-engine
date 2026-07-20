@@ -3,6 +3,8 @@
 # Ignore massive dependency folders that can be regenerated with npm install
 node_modules/
 # Ignore compiled/minified production output
+# NOTE: does not affect backend/execution-engine/src/main/resources/static/,
+# which is the intentionally-committed embedded frontend build (see CLAUDE.md).
 dist/
 build/
 
@@ -12,8 +14,12 @@ build/
 target/
 # Catch-all to prevent any stray compiled Java files from being committed
 *.class
+# JVM crash dumps, if a sandboxed process or the server itself ever segfaults
+hs_err_pid*.log
+replay_pid*.log
 
-# 3. Environment Variables (Security)
+
+# 3. Secrets & environment variables
 
 .env
 .env.local
@@ -21,10 +27,14 @@ target/
 .env.test
 .env.production
 *.pem
+*.key
+*.crt
+*.p12
+*.jks
 rce-key.pem
 
 
-# 4. IDE Settings & OS 
+# 4. IDE Settings & OS
 
 .idea/
 *.iml
@@ -34,4 +44,21 @@ rce-key.pem
 
 .DS_Store
 Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
 
+# Editor swap/backup files
+*~
+*.swp
+*.swo
+
+
+# 5. Logs & temp files
+
+*.log
+*.tmp
+npm-debug.log*
+
+# Stray installers accidentally downloaded into the repo root
+*.exe
+*.msi
