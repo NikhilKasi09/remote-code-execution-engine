@@ -1,6 +1,6 @@
 # Remote Code Execution Engine
 
-A web-based code runner: write Python or C++ in a browser editor, hit run, and get back the output of that code executed on a server — safely, inside a locked-down, single-use Docker container.
+A web-based code runner: write Python or C++ in a browser editor, hit run, and get back the output of that code executed on a server - safely, inside a locked-down, single-use Docker container.
 
 It's the same basic idea behind LeetCode's or Replit's "run" button: take arbitrary, untrusted user code and execute it without letting it do anything to the machine it's running on.
 
@@ -12,11 +12,11 @@ The frontend (React + [Monaco](https://microsoft.github.io/monaco-editor/), the 
 
 1. The code is written to a fresh temporary directory, one per request.
 2. The backend shells out to `docker run`, mounting that directory into a brand-new container for the selected language (`python:3.9` or `gcc:latest`), with the container locked down as tightly as the language still allows:
-   - `--network=none` — no network access at all
-   - `--memory=256m --cpus=0.5` — hard resource caps
-   - `--pids-limit=64` — blocks fork-bomb style abuse
-   - `--read-only` — the container's own filesystem can't be written to
-   - `--user 1000:1000` — runs as an unprivileged user, not root
+   - `--network=none` - no network access at all
+   - `--memory=256m --cpus=0.5` - hard resource caps
+   - `--pids-limit=64` - blocks fork-bomb style abuse
+   - `--read-only` - the container's own filesystem can't be written to
+   - `--user 1000:1000` - runs as an unprivileged user, not root
 3. Output is redirected straight to a file, capped at 100 KB so a runaway `print` loop can't exhaust server memory.
 4. Execution is killed if it runs past a per-language timeout (5s for Python, 10s for C++, since compilation eats into that budget).
 5. The temporary directory and the container are both torn down immediately after, whether the run succeeded, failed, or timed out.
@@ -69,7 +69,7 @@ Response:
 
 If the rate limit is hit, the response is `429 Too Many Requests` with a JSON error body instead.
 
-## Security model — and its limits
+## Security model - and its limits
 
 This project runs untrusted code, so it's worth being explicit about what's actually protected against and what isn't, rather than leaving it implied.
 
@@ -81,8 +81,8 @@ This project runs untrusted code, so it's worth being explicit about what's actu
 - Basic per-IP rate limiting on the endpoint itself.
 
 **What isn't, and why:**
-- The backend runs *inside* its own Docker container, and reaches the host's Docker daemon by mounting `/var/run/docker.sock` (a "Docker-outside-of-Docker" setup) so it can launch sibling containers. Anything with access to that socket has effective root on the host — so if a future change ever let request data influence the Docker invocation, or a container-escape vulnerability were found in the sandboxed runtime, the blast radius extends to the host. A production version of this would replace direct socket access with a scoped [docker-socket-proxy](https://github.com/Tecnativa/docker-socket-proxy), or move sandboxing to something with stronger isolation than shared-kernel containers, like gVisor or Firecracker microVMs (the latter is what services like Fly.io and CodeSandbox actually use).
-- There's no user authentication — the API is intentionally open so anyone can try it, with rate limiting as the only abuse control.
+- The backend runs *inside* its own Docker container, and reaches the host's Docker daemon by mounting `/var/run/docker.sock` (a "Docker-outside-of-Docker" setup) so it can launch sibling containers. Anything with access to that socket has effective root on the host - so if a future change ever let request data influence the Docker invocation, or a container-escape vulnerability were found in the sandboxed runtime, the blast radius extends to the host. A production version of this would replace direct socket access with a scoped [docker-socket-proxy](https://github.com/Tecnativa/docker-socket-proxy), or move sandboxing to something with stronger isolation than shared-kernel containers, like gVisor or Firecracker microVMs (the latter is what services like Fly.io and CodeSandbox actually use).
+- There's no user authentication - the API is intentionally open so anyone can try it, with rate limiting as the only abuse control.
 - Rate limiting is in-memory (a `ConcurrentHashMap` keyed by client IP), which is correct for a single instance but wouldn't hold up unmodified across multiple backend replicas behind a load balancer.
 
 ## What's next
